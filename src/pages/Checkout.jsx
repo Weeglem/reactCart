@@ -12,6 +12,7 @@ const Checkout = () => {
     const User = useContext(UserContext);
     const Products = useContext(productsContext);
     const [loaded,setLoaded] = useState(false);
+    
 
     if(!loaded && Products.loaded){
         setLoaded(true)

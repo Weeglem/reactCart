@@ -5,21 +5,28 @@ import Form from 'react-bootstrap/Form';
 import { useParams } from 'react-router';
 import { productsContext } from '../contexts/ProductsContext';
 import LoadingPage from './LoadingPage';
+import { useNavigate } from 'react-router';
+import { CartContext } from '../contexts/CartContext';
 
-const NewProduct = () => {
+const ProductEditor = () => {
 
     const ProductID = useParams().id;
+    const Navigate = useNavigate();
+
+    const products = useContext(productsContext);
+    const cart = useContext(CartContext);
+
+    const [loaded,setLoaded] = useState(false);
 
     const[ProdTitle,setTitle] = useState("");
     const[ProdPrice,setPrice] = useState("");
     const[ProdDescription,setDescription] = useState("");
     const[ProdImage,setImage] = useState("");
     const[ProdCategory,setCategory] = useState("")
-    const [loaded,setLoaded] = useState(false);
-
-    const products = useContext(productsContext);
+    
     const [FinalURL,setFinalURL] = useState("")
     const [FinalMethod,setFinalMethod] = useState("");
+    const [editing,setEditing] = useState(false)
 
     //editor is a single script that checks
     //If ID is set or not, if set, 
@@ -38,11 +45,14 @@ const NewProduct = () => {
                 setDescription(prodData.description)
                 setImage(prodData.image)
                 setCategory(prodData.category)
-                setLoaded(true);
+                setEditing(true)
+                setLoaded(true)
+                
             }
         }else{
             setFinalURL("https://fakestoreapi.com/products")
             setFinalMethod("POST")
+            setEditing(false)
             setLoaded(true);
         }
     }
@@ -66,22 +76,26 @@ const NewProduct = () => {
         
         fetch(FinalURL,{
             method : FinalMethod,
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(
-            (data) => {
-            alert("Success!!!")
+        }).then(() => { 
+            products.editProduct(ProductID,data) 
+            
         }).catch((err) => 
-            alert(err)
+            console.log(err)
         )
+    }
+
+    function deleteProduct(){
+        cart.removeProduct(ProductID);
+        products.deleteProduct(ProductID); 
+        Navigate("/")
     }
 
     return (
         <>
             <Container>
-                <h1>Product Editor</h1>
+                <h1>{ ProductID ? "Edit Product" : "New Product"}</h1>
 
                 <Form onSubmit={SubmitForm}>
                     <Form.Group className="mb-3" controlId="formBasicTitle">
@@ -102,10 +116,16 @@ const NewProduct = () => {
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label>Product Image URL</Form.Label>
                         <Form.Control type="text" value={ProdImage} onChange={(ev) => setImage(ev.target.value)} required/>
-                        <Form.Control.Feedback type="invalid" >Please provide a valid zip.</Form.Control.Feedback>
                     </Form.Group>
 
                     <Button variant="primary" type="submit">Submit</Button>
+
+                    {
+                        (ProductID ? (<Button variant="primary" onClick={() => deleteProduct()}>Delete Product</Button>) : <></>)
+                    }
+
+
+                    
                 </Form>
             </Container>
         </>
@@ -113,4 +133,4 @@ const NewProduct = () => {
 
 }
 
-export default NewProduct;
+export default ProductEditor;

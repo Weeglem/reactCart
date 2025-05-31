@@ -35,17 +35,21 @@ export const CartProvider = ({children}) => {
 
     /***Already in cart */
     function alreadyPurchased(id){
-        return Cart.find((product) => product.id === id) ? true : false;
+        return Cart.find((product) => product.id == id) ? true : false;
     }
 
     /***Returns the id quantity */
     function getProductQuantity(id){
-        return Cart.find((product) => product.id === id).quantity;
+        if(!alreadyPurchased(id)){
+            throw("You haven't purchased this product")
+        }
+        
+        return Cart.find((product) => product.id == id).quantity;
     }
 
     function addProduct(id){
         if(alreadyPurchased(id)){
-            setCart(cart => cart.map(item => item.id === id ? {...item, quantity: item.quantity + 1} : item))
+            setCart(cart => cart.map(item => item.id == id ? {...item, quantity: item.quantity + 1} : item))
             setFinalPrice(finalPrice + Products.getProduct(id).price) 
         }else{
             const newitem = {id :id, quantity: 1}
@@ -68,7 +72,7 @@ export const CartProvider = ({children}) => {
 
         const x = getProductQuantity(id);
         setFinalPrice(finalPrice - Products.getProduct(id).price * x)
-        const newCart = Cart.filter((product) => (product.id !== id));
+        const newCart = Cart.filter((product) => (product.id != id));
 
         //QUICK PATCH
         newCart.length == 0 ? setCart([]) : setCart(newCart);
@@ -77,7 +81,7 @@ export const CartProvider = ({children}) => {
 
     function changeProductValue(id,newVal){
         if(getProductQuantity(id) > 0){
-            setCart(cart => cart.map(item => item.id === id ? {...item, quantity: item.quantity + newVal} : item))
+            setCart(cart => cart.map(item => item.id == id ? {...item, quantity: item.quantity + newVal} : item))
             setFinalPrice(finalPrice + Products.getProduct(id).price * newVal)
     
         }else{

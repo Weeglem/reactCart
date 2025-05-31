@@ -21,8 +21,7 @@ import "@fontsource/roboto/400-italic.css"; // Specify weight and style
 import Footer from "./components/Footer"
 import Checkout from "./pages/Checkout"
 import NotFoundpage from "./pages/NotFoundpage"
-import NewProduct from "./pages/NewProduct"
-import EditProduct from "./pages/EditProduct"
+import ProductEditor from "./pages/ProductEditor"
 
 function App() {
   return (
@@ -42,7 +41,7 @@ function App() {
               <Route element={<Login />} path="/login" />
 
               
-              <Route element={<NewProduct/>} path="/product/editor/:id?" />
+              <Route element={<ProductEditor />} path="/product/editor/:id?" />
               <Route element={<Product/>} path="/product/:id" />
               
               <Route path="*" element={<NotFoundpage/>} /> 

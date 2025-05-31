@@ -38,17 +38,12 @@ const Product = () => {
             }
             
             setLoaded(true)
-
         }
     },[products.loaded])
     
     
 
-    if(error){ return(
-    <>
-        <b>{error}</b>
-    </>
-    ) }
+    if(error){ return(<><b>{error}</b></>)}
 
     if(!loaded){ return(
     <LoadingPage />)}
@@ -89,11 +84,15 @@ const Product = () => {
                                         size="lg">Add to Cart&nbsp;&nbsp;<i class="bi bi-bag"></i>
                                     </Button>
 
-                                    <Button
-                                        onClick={() => {Navigate("/product/editor/"+ProductInfo.id)}}
-                                    >
-                                        Edit Product
-                                    </Button>
+                                    
+                                </div>
+                            </>
+                        }
+
+                        {
+                            <>
+                                <div className="d-grid gap-2">
+                                    <Button onClick={() => {Navigate("/product/editor/"+ProductInfo.id)}}>Edit Product</Button>
                                 </div>
                             </>
                         }
