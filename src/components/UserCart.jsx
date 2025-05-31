@@ -15,8 +15,6 @@ const UserCart = () => {
     const UserCart = useContext(CartContext);
     const Products = useContext(productsContext);
     
-
-    
     return(
         <>
             <Offcanvas show={UserCart.show}>

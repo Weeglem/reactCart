@@ -1,6 +1,6 @@
 
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, Navigate, useNavigate, useParams } from "react-router";
 import { productsContext } from "../contexts/ProductsContext";
 import { CartContext } from "../contexts/CartContext";
 import ProductQuantity from "../components/ProductQuantity";
@@ -8,6 +8,7 @@ import Spinner from 'react-bootstrap/Spinner';
 
 import { Row,Col,Button,Container,Badge } from "react-bootstrap";
 import ProductScore from "../components/ProductScore";
+import LoadingPage from "./LoadingPage";
 
 
 const Product = () => {
@@ -21,6 +22,7 @@ const Product = () => {
     const [error,setError] = useState(false);
     
     const ProductID = useParams().id;
+    const Navigate = useNavigate();
 
     //HACK:9
     //WAITS FOR PRODUCTS LOADED, TO ACTUALLY LOAD INFO
@@ -40,6 +42,7 @@ const Product = () => {
         }
     },[products.loaded])
     
+    
 
     if(error){ return(
     <>
@@ -48,12 +51,7 @@ const Product = () => {
     ) }
 
     if(!loaded){ return(
-    <>
-        <Container style={{maxWidth:"980px"}}>
-            <Spinner animation="border" style={{margin:"0 auto"}} />
-        </Container>
-    
-    </>)}
+    <LoadingPage />)}
 
     return(
         <Container style={{maxWidth:"980px"}}>
@@ -69,7 +67,7 @@ const Product = () => {
 
                         <Badge style={{marginBottom:"15px"}}>{ProductInfo.category}</Badge>
 
-                        <h2 className='ProductPrice'>${ProductInfo.price.toFixed(2)}</h2>
+                        <h2 className='ProductPrice'>${ProductInfo.price/*.toFixed(2)*/}</h2>
                         
                         {
                             Cart.alreadyPurchased(ProductInfo.id) ?
@@ -89,6 +87,12 @@ const Product = () => {
                                         onClick={() => Cart.addProduct(ProductInfo.id)} 
                                         title={"Click to add "+ProductInfo.title+" to cart"} 
                                         size="lg">Add to Cart&nbsp;&nbsp;<i class="bi bi-bag"></i>
+                                    </Button>
+
+                                    <Button
+                                        onClick={() => {Navigate("/product/editor/"+ProductInfo.id)}}
+                                    >
+                                        Edit Product
                                     </Button>
                                 </div>
                             </>

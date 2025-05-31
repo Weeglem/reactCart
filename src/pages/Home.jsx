@@ -1,11 +1,26 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { productsContext } from "../contexts/ProductsContext";
 import { ProductsList } from "../components/ProductLists";
+import LoadingPage from "./LoadingPage";
 
 function Home(){
     const products = useContext(productsContext)
     const user = useContext(UserContext)
+    const[loaded,setLoaded] = useState(false);
+
+    if(!loaded){
+
+        if(products.loaded){
+            setLoaded(true)
+        }
+    }
+
+    if(!loaded){
+        return <LoadingPage/>
+    }
+
+    
     
     return(
         <>

@@ -68,11 +68,11 @@ export const CartProvider = ({children}) => {
 
         const x = getProductQuantity(id);
         setFinalPrice(finalPrice - Products.getProduct(id).price * x)
-
         const newCart = Cart.filter((product) => (product.id !== id));
-        setCart(newCart);
 
-        SaveCart()
+        //QUICK PATCH
+        newCart.length == 0 ? setCart([]) : setCart(newCart);
+        SaveCart();
     }
 
     function changeProductValue(id,newVal){

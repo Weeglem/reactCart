@@ -1,25 +1,28 @@
 import { useContext, useState} from "react";
 import { UserContext } from "../contexts/UserContext";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { Container } from "react-bootstrap";
 
 
+
 const Login = () => {
     const User = useContext(UserContext);
     const[username,setUsername] = useState(undefined);
+    const Navigate = useNavigate();
 
     function login(ev){
         ev.preventDefault() 
         try{
             User.login(username);
+            Navigate("/");
         }catch(err){
             alert(err);
         }
 
-        window.location.href ="/"
+        
     }
 
     return (

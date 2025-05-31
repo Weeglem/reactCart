@@ -8,24 +8,30 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useNavigate } from 'react-router';
 
 
 const WebNavbar = () => {
     const User = useContext(UserContext);
     const cart = useContext(CartContext);
+    const Navigate = useNavigate();
+
+    function NavigateTo(ev,URL){
+      ev.preventDefault();
+      Navigate(URL)
+    }
 
     return (
       <>
         <Navbar sticky="top" expand="lg" className="bg-body-tertiary Navbar">
           <Container>
-            <Navbar.Brand href="#home" style={{color:'white'}}>Tienda</Navbar.Brand>
+            <Navbar.Brand href="/" onClick={(ev) => NavigateTo(ev,"/")} style={{color:'white'}}>Tienda</Navbar.Brand>
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link href='/'>Inicio</Nav.Link>
-                <Nav.Link href='/'>Productos</Nav.Link>
+                <Nav.Link href='/' onClick={(ev) => NavigateTo(ev,"/")}>Productos</Nav.Link>
                 
                   
               </Nav>
@@ -43,7 +49,7 @@ const WebNavbar = () => {
                     </>
                     :
                     <>
-                      <Nav.Link href="/login" className="justify-content-end" >
+                      <Nav.Link href="/login" onClick={(ev) => NavigateTo(ev,"/login")}  className="justify-content-end" >
                         <i className="bi bi-person"></i> Login 
                       </Nav.Link>
                     </>

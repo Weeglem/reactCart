@@ -7,18 +7,29 @@ export const ProductsProvider = ({children}) => {
     const [loaded,setLoaded] = useState(false);
 
     useEffect(() => {
-        let products = localStorage.getItem("products");
 
-            fetch("https://fakestoreapi.com/products")
-            .then((response) => response.json())
-            .then(
-                (data) => {
-                setProducts(data)
-                localStorage.setItem("products",data)
+            if(localStorage.getItem("products")){
+                console.log("Loaded from Storage")
+                setProducts(JSON.parse(localStorage.getItem("products")));
                 setLoaded(true)
-            }).catch((err) => {
-                console.log(err);
-            })
+            }else{
+                //fetch("https://6837a1f92c55e01d184a6410.mockapi.io/api/products")
+                fetch("https://fakestoreapi.com/products")
+                .then((response) => response.json())
+                .then(
+                    (data) => {
+                    setProducts(data)
+                    //SET PRODUCTS LOCAL,
+                    //AVOID POSSIBLE SERVER FALL
+                    //localStorage.setItem("products",JSON.stringify(data))
+                    setLoaded(true)
+                }).catch((err) => {
+                    console.log(err);
+                })
+            }
+
+
+                
 
     },[])
 

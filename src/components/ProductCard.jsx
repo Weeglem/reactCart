@@ -3,20 +3,26 @@ import { Button } from 'react-bootstrap';
 import { useContext } from 'react';
 import { CartContext } from '../contexts/CartContext';
 import Badge from 'react-bootstrap/Badge';
-import { Navigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import ProductScore from './ProductScore';
+
 
 
 const ProductCard = ({product}) => {
 
+
+  const Navigate = useNavigate();
+
+  
   function viewProduct(){
-      window.location.href = "/product/"+product.id
+      Navigate("/product/"+product.id)
   }
+
 
   const Cart = useContext(CartContext);
 
     return(
-    <Card onClick={() => viewProduct()} className='ProductCard'>
+    <Card onClick={(ev) => {ev.preventDefault(); viewProduct()}} key={product.id} className='ProductCard'>
       <div style={{display:"flex",justifyContent:"center",background:"white"}}>
         <Card.Img variant="bottom" src={product.image} style={{width:"140px",height:"160px"}} />
       </div>
