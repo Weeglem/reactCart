@@ -41,6 +41,31 @@ export const ProductsProvider = ({children}) => {
         return products.filter((item) => item.category == category);
     }
 
+    function getName(name){
+        return products.filter((item) => item.title == name)
+    }
+    
+    function filterName(products,name){
+        return products.filter(
+            product => 
+                product.title.toLowerCase().includes(name.toLowerCase())
+        )
+    }
+
+    function filterCategory(products,category){
+        return products.filter(
+            product => 
+                product.category.toLowerCase().includes(category.toLowerCase())
+        )
+    }
+
+    function getTags(){
+        const Test = new Map();
+        products.map(product =>  Test.set(product.category))
+
+        return Test; 
+    }
+
     function editProduct(id,newData = {}){
         setProducts(products.map(product => product.id == id ? {...newData} : product));
         updateDB();
@@ -63,6 +88,8 @@ export const ProductsProvider = ({children}) => {
         getCategory,
         editProduct,
         deleteProduct,
+        filterName,
+        getTags,
     }}>{children}</productsContext.Provider>
 
 }

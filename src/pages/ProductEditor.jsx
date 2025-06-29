@@ -37,20 +37,19 @@ const ProductEditor = () => {
         if(ProductID){
             if(products.loaded){
                 const prodData = products.getProduct(ProductID);
-                setFinalURL(`https://fakestoreapi.com/products/${ProductID}`)
+                setFinalURL(`https://6837a1f92c55e01d184a6410.mockapi.io/api/products/${ProductID}`)
                 setFinalMethod("PUT");
 
                 setTitle(prodData.title)
                 setPrice(prodData.price)
                 setDescription(prodData.description)
-                setImage(prodData.image)
                 setCategory(prodData.category)
                 setEditing(true)
                 setLoaded(true)
                 
             }
         }else{
-            setFinalURL("https://fakestoreapi.com/products")
+            setFinalURL("https://6837a1f92c55e01d184a6410.mockapi.io/api/products")
             setFinalMethod("POST")
             setEditing(false)
             setLoaded(true);
@@ -58,16 +57,37 @@ const ProductEditor = () => {
     }
 
     if(!loaded){ return(<LoadingPage />)}
+
+    function isEmpty(value){
+        if (value === null || value === "") {
+            return true;
+        }
+
+        return false
+    }
     
     function SubmitForm(ev){
         ev.preventDefault()
+
+        try{
+
+            if(isEmpty(ProdTitle)){throw("Title cannot be empty")}
+
+            if(isEmpty(ProdPrice)){throw("Price cannot be empty")}
+            if(ProdPrice < 0){
+                throw("Product price cannot be lower than zero!")
+            }
+
+            if(isEmpty(ProdCategory)){throw("Category cannot be empty")}
+        }catch(err){
+            alert(err)
+        }
 
         const data = {
             title : ProdTitle,
             price : ProdPrice,
             description : ProdDescription,
-            category : ProdCategory,
-            image : ProdImage,     
+            category : ProdCategory, 
         }
 
         if(ProductID){
@@ -80,10 +100,10 @@ const ProductEditor = () => {
             body: JSON.stringify(data)
         }).then(() => { 
             products.editProduct(ProductID,data) 
-            
-        }).catch((err) => 
-            console.log(err)
-        )
+            alert("Product created succesfuly!")
+        }).catch((err) => {
+            alert(err)
+        })
     }
 
     function deleteProduct(){
@@ -113,9 +133,9 @@ const ProductEditor = () => {
                         <Form.Control required as="textarea" rows={4} placeholder="Enter description" value={ProdDescription} onChange={(ev) => setDescription(ev.target.value)} />
                     </Form.Group>
 
-                    <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Label>Product Image URL</Form.Label>
-                        <Form.Control type="text" value={ProdImage} onChange={(ev) => setImage(ev.target.value)} required/>
+                    <Form.Group className="mb-3" controlId="formBasicDescription">
+                        <Form.Label>Category</Form.Label>
+                        <Form.Control required type="text" placeholder="Enter category" value={ProdCategory} onChange={(ev) => setCategory(ev.target.value)} />
                     </Form.Group>
 
                     <Button variant="primary" type="submit">Submit</Button>

@@ -1,37 +1,55 @@
-import { useContext, useState } from "react";
-import { UserContext } from "../contexts/UserContext";
+import { useContext, useEffect, useState } from "react";
 import { productsContext } from "../contexts/ProductsContext";
+import { UserContext } from "../contexts/UserContext";
 import { ProductsList } from "../components/ProductLists";
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import LoadingPage from "./LoadingPage";
 
-function Home(){
+const Home = () => {
+
     const products = useContext(productsContext)
-    const user = useContext(UserContext)
-    const[loaded,setLoaded] = useState(false);
 
-    if(!loaded){
+    const [DisplayProductsList,setDisplayProductsList] = useState(null)
+    const [loading,SetLoading] = useState(true);
 
+    const [searchName,setName] = useState(null);
+    const [searchCategory,setCategory] = useState(null);
+
+    //TRIGGER SEARCH 
+    // //EVERYTIME SEARCHNAME CHANGES
+    // SUCKS
+    useEffect(() => {
+        if(!loading){
+            if(searchName != "" && searchName != null )
+            setDisplayProductsList(products.filterName(products.products,searchName));
+        }
+    },[searchName])
+
+    if(loading){
         if(products.loaded){
-            setLoaded(true)
+            SetLoading(false)
+            setDisplayProductsList(products.products)
         }
     }
 
-    if(!loaded){
-        return <LoadingPage/>
+    if(loading){
+        return(<LoadingPage />)
     }
 
-    
-    
     return(
         <>
-            <h1>Productos</h1>
-            <ProductsList products={products.products} />
-        </>
+            <Form.Control onChange={(ev) => {setName(ev.target.value);}}  size="lg" type="text" placeholder="Product name" />
+            
+            {
+                DisplayProductsList.length > 0 ?
+                <ProductsList products={DisplayProductsList}/>
+                :
+                "No results found"
+            }
 
-    );
+        </>
+    )
 }
 
 export default Home;
-
-/*<h1>Trending Products</h1>
-            <ProductsList products={products.products} />*/
